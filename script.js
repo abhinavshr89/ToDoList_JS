@@ -1,7 +1,8 @@
 const addButton = document.querySelector(".add-btn");
 const taskContainer = document.querySelector(".task-container");
 const taskInput = document.querySelector("#task-input");
-
+const mainRow = document.querySelector(".mainrow")
+const popupBox = document.querySelector(".popup-box");
 // Load tasks from localStorage on page load
 document.addEventListener("DOMContentLoaded", () => {
     loadTasks();
@@ -14,75 +15,46 @@ addButton.addEventListener("click", () => {
     } else {
         taskContainer.innerHTML += `
             <div class="col-12 p-3 task-line">
-                <input type="text" value="${newTask}" readonly>
-                <button class="edit-btn"><i class="fa-solid fa-pen"></i></button>
+                <input class="input" type="text" value="${newTask}" readonly>
+                <button id="edit-btn" class="edit-btn">Edit</i></button>
                 <button class="delete-btn">Delete</button>
             </div>
         `;
-       
-        taskInput.value = ""; 
 
-       
-        saveTasks();
+        taskInput.value = "";
     }
 });
 
-// using event delegation here 
-taskContainer.addEventListener("click", (e) => {
+// using event delegation here
+taskContainer.addEventListener('click', (e) => {
     const targetButton = e.target;
-    const parent = targetButton.parentElement;
+    const parentOfTarget = targetButton.parentElement;
+    const mainParent = parentOfTarget.parentElement; // Fix: use parentElement instead of parent
+    const targetedInput = parentOfTarget.querySelector("input");
 
     if (targetButton.classList.contains("edit-btn")) {
-        const targetInput = parent.querySelector("input");
-        targetInput.removeAttribute("readonly");
-        targetInput.focus();
+        targetedInput.removeAttribute("readonly");
+        targetedInput.focus();
 
         const handleEnterKey = (event) => {
             if (event.key === "Enter") {
-                targetInput.setAttribute("readonly", true);
-                targetInput.removeEventListener("keyup", handleEnterKey);
-                // Save tasks to localStorage after editing
-                saveTasks();
+                targetedInput.setAttribute("readonly", true);
+                targetedInput.removeEventListener("keyup", handleEnterKey);
+
+                // Additional logic when Enter key is pressed (e.g., save to localStorage)
+                console.log("Task updated:", targetedInput.value);
+
+                popupBox.style.display ="block";
+                setTimeout(() => {
+                popupBox.style.display ="none";
+                    
+                }, 1000);
             }
         };
 
-        targetInput.addEventListener("keyup", handleEnterKey);
-    } else if (targetButton.classList.contains("delete-btn")) {
-        parent.remove();
-        // Save tasks to localStorage after deletion
-        saveTasks();
+        targetedInput.addEventListener("keyup", handleEnterKey);
+    }
+    if(targetButton.classList.contains("delete-btn")){
+        parentOfTarget.remove();
     }
 });
-
-
-
-
-
-
-
-
-// Function to save tasks to localStorage
-function saveTasks() {
-    const tasks = [];
-    document.querySelectorAll(".task-line input").forEach((input) => {
-        tasks.push(input.value);
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-// Function to load tasks from localStorage
-function loadTasks() {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-        const tasks = JSON.parse(savedTasks);
-        tasks.forEach((task) => {
-            taskContainer.innerHTML += `
-                <div class="col-12 p-3 task-line">
-                    <input type="text" value="${task}" readonly>
-                    <button class="edit-btn"><i class="fa-solid fa-pen"></i></button>
-                    <button class="delete-btn">Delete</button>
-                </div>
-            `;
-        });
-    }
-}

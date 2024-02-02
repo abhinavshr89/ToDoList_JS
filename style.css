@@ -8,6 +8,7 @@ html,
 body {
   height: 100%;
   width: 100%;
+  background-color: var(--bg);
 }
 :root{
     --bg:lightseagreen;
@@ -16,7 +17,7 @@ body {
 
 
 .mainrow {
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--bg);
 }
 
@@ -39,6 +40,7 @@ input {
   top: 30px;
   right: 95px;
   padding: 3px;
+
 }
 .delete-btn {
   position: absolute;
@@ -85,8 +87,27 @@ input {
 .edit-btn{
     background-color:lightblue;
     border-radius: 10px;
-    width: 30px;
+    width: 50px;
 }
 .heading{
     text-align: center;
+}
+
+
+
+.popup-box {
+  width: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius: 10px;
+  display: none;
+  text-align: center;
+  background-color: greenyellow;
+  box-shadow: 10px 10px 30px  rgba(0, 0, 0, .4);
 }
