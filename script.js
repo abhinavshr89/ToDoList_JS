@@ -3,7 +3,7 @@ const taskContainer = document.querySelector(".task-container");
 const taskInput = document.querySelector("#task-input");
 const popupBox = document.querySelector(".popup-box");
 
-let isEditing = false; // Flag to track whether an edit is in progress
+
 
 // Load tasks from localStorage on page load
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,6 +19,7 @@ addButton.addEventListener("click", () => {
             <div class="col-12 p-3 task-line">
                 <input class="input" type="text" value="${newTask}" readonly>
                 <button id="edit-btn" class="edit-btn" onclick="editTask(this)">Edit</button>
+                <button class="save-btn">Save</button>
                 <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
             </div>
         `;
@@ -26,42 +27,43 @@ addButton.addEventListener("click", () => {
         taskInput.value = "";
     }
 });
+var isEditing = false;
 
-//editTask(this)-> here "this" is used to pass the reference of the button clicked to the function 
-// using onclick function for edit and delete button
-function editTask(button) {
-    if (isEditing) {
-        alert("Please save the current task before editing another one.");
-        return;
-    }
+taskContainer.addEventListener("click", (e) => {
+    const targetButton = e.target;
+    const parentOfButton = targetButton.parentElement;
 
-    isEditing = true;
-
-    const parentOfButton = button.parentElement;
     const targetedInput = parentOfButton.querySelector("input");
+    const saveButton = parentOfButton.querySelector(".save-btn");
 
-    targetedInput.removeAttribute("readonly");
-    targetedInput.focus();
+    if (targetButton.classList.contains("edit-btn")) {
+        if (isEditing) {
+            alert("Please finish editing the current task before editing another one.");
+            return;
+        }
 
-    button.style.backgroundColor = "lightgreen";
-    button.textContent = "Save";
+        // Toggle visibility of buttons
+        targetButton.style.display = "none";
+        saveButton.style.display = "block";
 
-    button.onclick = function () {
+        // Enable input for editing
+        targetedInput.removeAttribute("readonly");
+        targetedInput.focus();
+
+        isEditing = true;
+    } else if (targetButton.classList.contains("save-btn")) {
+        // Toggle visibility of buttons
+        const editBtn = parentOfButton.querySelector(".edit-btn");
+        editBtn.style.display = "block";
+        saveButton.style.display = "none";
+
+        // Disable input after saving
         targetedInput.setAttribute("readonly", true);
-        isEditing = false; // Reset the flag
-        button.style.backgroundColor = "lightblue";
-        button.textContent = "Edit";
-       
-        console.log("Task updated:", targetedInput.value);
 
-        popupBox.style.display = "block";
-        setTimeout(() => {
-            popupBox.style.display = "none";
-        }, 1000);
-    };
-}
-
-function deleteTask(button) {
-    const parentOfButton = button.parentElement;
-    parentOfButton.remove();
-}
+        isEditing = false;
+    } else if (targetButton.classList.contains("delete-btn")) {
+        // Remove the task
+        parentOfButton.remove();
+        isEditing = false;
+    }
+});

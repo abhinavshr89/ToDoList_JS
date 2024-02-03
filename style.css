@@ -88,12 +88,21 @@ input {
     background-color:lightblue;
     border-radius: 10px;
     width: 50px;
-}
-.heading{
+  }
+  .heading{
     text-align: center;
+  }
+  
+  .save-btn{
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 95px;
+  padding: 3px;
+  background-color:lightgreen;
+  border-radius: 10px;
+  width: 50px;
 }
-
-
 
 .popup-box {
   width: 50%;
