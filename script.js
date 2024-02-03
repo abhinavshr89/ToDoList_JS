@@ -56,7 +56,10 @@ taskContainer.addEventListener("click", (e) => {
         const editBtn = parentOfButton.querySelector(".edit-btn");
         editBtn.style.display = "block";
         saveButton.style.display = "none";
-
+        popupBox.style.display="block";
+        setTimeout(()=>{
+            popupBox.style.display="none";
+        },500);
         // Disable input after saving
         targetedInput.setAttribute("readonly", true);
 
